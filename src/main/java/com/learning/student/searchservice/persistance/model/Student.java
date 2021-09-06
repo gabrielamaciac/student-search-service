@@ -22,7 +22,7 @@ public class Student {
     private String lastName;
     @Indexed(name = "cnp", type = "string")
     private String cnp;
-    @Indexed(name = "is_valid", type = "boolean")
+    @Indexed(name = "is_valid", type = "string")
     private boolean isValid;
 }
 

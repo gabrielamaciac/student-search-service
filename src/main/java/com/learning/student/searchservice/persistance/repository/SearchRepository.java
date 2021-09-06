@@ -22,4 +22,7 @@ public interface SearchRepository extends SolrCrudRepository<Student, String> {
 
     @Query("is_valid:*?0*")
     Page<Student> findByIsValid(boolean isValid, Pageable page);
+
+    @Query(value = "id:?0", delete = true)
+    void deleteById(String id);
 }

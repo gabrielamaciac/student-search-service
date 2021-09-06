@@ -2,6 +2,7 @@ package com.learning.student.searchservice.service;
 
 import com.learning.student.searchservice.persistance.model.Student;
 import com.learning.student.searchservice.persistance.repository.SearchRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class SearchService {
     SearchRepository searchRepository;
 
@@ -22,7 +24,7 @@ public class SearchService {
         if (student.isPresent()) {
             return student.get();
         } else {
-            throw new NoSuchElementException("No student found.");
+            throw new NoSuchElementException("No student found with the given id.");
         }
     }
 
@@ -46,19 +48,26 @@ public class SearchService {
         return searchRepository.findByIsValid(isValid, PageRequest.of(page, size)).getContent();
     }
 
-    public Student saveStudent(String id, Student student) {
-        Optional<Student> studentFound = searchRepository.findById(id);
-        if (studentFound.isPresent()) {
-            //update if it already exists
-            Student existingStudent = studentFound.get();
-            existingStudent.setFirstName(student.getFirstName());
-            existingStudent.setLastName(student.getLastName());
-            existingStudent.setCnp(student.getCnp());
-            existingStudent.setValid(student.isValid());
-            return searchRepository.save(existingStudent);
+    public Student create(Student student) {
+        return searchRepository.save(student);
+    }
+
+    public void update(Student student) {
+        Student studentFound = findById(student.getId());
+        if (studentFound != null) {
+            studentFound.setId(student.getId());
+            studentFound.setFirstName(student.getFirstName());
+            studentFound.setLastName(student.getLastName());
+            studentFound.setCnp(student.getCnp());
+            studentFound.setValid(student.isValid());
+            searchRepository.save(studentFound);
         } else {
-            // create if not
-            return searchRepository.save(student);
+            log.info("Student was not updated.");
         }
+    }
+
+    public void delete(Student student) {
+        searchRepository.deleteById(student.getId());
+        log.info("Student deleted from solr.");
     }
 }
