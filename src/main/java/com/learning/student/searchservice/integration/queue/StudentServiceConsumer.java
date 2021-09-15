@@ -6,8 +6,8 @@ import com.learning.student.searchservice.integration.model.OperationType;
 import com.learning.student.searchservice.integration.model.SearchPayload;
 import com.learning.student.searchservice.persistance.model.Student;
 import com.learning.student.searchservice.service.SearchService;
+import com.learning.student.searchservice.util.StudentMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,6 @@ public class StudentServiceConsumer {
     SearchService searchService;
 
     ObjectMapper objectMapper = new ObjectMapper();
-    ModelMapper modelMapper = new ModelMapper();
 
     public StudentServiceConsumer(SearchService searchService) {
         this.searchService = searchService;
@@ -39,7 +38,7 @@ public class StudentServiceConsumer {
             log.info("Processing message: " + message);
             SearchPayload payload = objectMapper.readValue(message, SearchPayload.class);
             log.info("Received student from search-queue: " + payload.getStudent().getFirstName());
-            savePayload(payload.getOperationType(), modelMapper.map(payload.getStudent(), Student.class));
+            savePayload(payload.getOperationType(), StudentMapper.convertStudentMessageToStudent(payload.getStudent()));
             log.info("Student saved to solr.");
         } catch (JsonProcessingException e) {
             log.error("Error processing received json: " + e);

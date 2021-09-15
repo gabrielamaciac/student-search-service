@@ -1,10 +1,10 @@
-package com.learning.student.searchservice.service;
+package com.learning.student.searchservice.facade;
 
 import com.learning.student.searchservice.persistance.model.Student;
 
 import java.util.List;
 
-public interface SearchService {
+public interface SearchFacade {
     Student findById(String id);
 
     List<Student> findByCustomQuery(String searchTerm, int page, int size);
