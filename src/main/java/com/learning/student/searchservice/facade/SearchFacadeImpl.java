@@ -1,6 +1,7 @@
 package com.learning.student.searchservice.facade;
 
 import com.learning.student.searchservice.persistance.model.Student;
+import com.learning.student.searchservice.persistance.model.StudentUpdate;
 import com.learning.student.searchservice.service.SearchService;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,11 @@ public class SearchFacadeImpl implements SearchFacade {
     }
 
     @Override
+    public List<Student> findByNameAndCnp(String firstName, String lastName, String cnp, int page, int size) {
+        return searchService.findByNameAndCnp(firstName, lastName, cnp, page, size);
+    }
+
+    @Override
     public List<Student> findOnlyValidStudents(boolean isValid, int page, int size) {
         return searchService.findOnlyValidStudents(isValid, page, size);
     }
@@ -35,8 +41,8 @@ public class SearchFacadeImpl implements SearchFacade {
     }
 
     @Override
-    public void update(Student student) {
-        searchService.update(student);
+    public void update(String id, StudentUpdate student) {
+        searchService.update(id, student);
     }
 
     @Override

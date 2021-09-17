@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learning.student.searchservice.integration.model.OperationType;
 import com.learning.student.searchservice.integration.model.SearchPayload;
-import com.learning.student.searchservice.persistance.model.Student;
+import com.learning.student.searchservice.integration.model.StudentMessage;
 import com.learning.student.searchservice.service.SearchService;
 import com.learning.student.searchservice.util.StudentMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -36,25 +36,25 @@ public class StudentServiceConsumer {
     private void processMessage(String message) {
         try {
             log.info("Processing message: " + message);
+            // rename searchpayload
             SearchPayload payload = objectMapper.readValue(message, SearchPayload.class);
-            log.info("Received student from search-queue: " + payload.getStudent().getFirstName());
-            savePayload(payload.getOperationType(), StudentMapper.convertStudentMessageToStudent(payload.getStudent()));
-            log.info("Student saved to solr.");
+            log.info("Received student from search-queue: " + payload.getStudent().getFirstName() + " " + payload.getStudent().getLastName());
+            savePayload(payload.getOperationType(), payload.getStudent());
         } catch (JsonProcessingException e) {
-            log.error("Error processing received json: " + e);
+            log.error("Error processing received json: ", e);
         }
     }
 
-    private void savePayload(OperationType operationType, Student student) {
+    private void savePayload(OperationType operationType, StudentMessage studentMessage) {
         switch (operationType) {
             case CREATE:
-                searchService.create(student);
+                searchService.create(StudentMapper.convertStudentMessageToStudent(studentMessage));
                 break;
             case UPDATE:
-                searchService.update(student);
+                searchService.update(studentMessage.getId(), StudentMapper.convertStudentMessageToStudentUpdate(studentMessage));
                 break;
             case DELETE:
-                searchService.delete(student);
+                searchService.delete(StudentMapper.convertStudentMessageToStudent(studentMessage));
                 break;
         }
     }
