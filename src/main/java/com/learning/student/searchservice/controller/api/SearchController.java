@@ -3,8 +3,8 @@ package com.learning.student.searchservice.controller.api;
 import com.learning.student.searchservice.controller.model.StudentDto;
 import com.learning.student.searchservice.facade.SearchFacade;
 import com.learning.student.searchservice.persistance.model.Student;
-import com.learning.student.searchservice.util.StudentMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,9 +19,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SearchController implements SearchApi {
     private final SearchFacade searchFacade;
+    private final ModelMapper modelMapper;
 
-    public SearchController(SearchFacade searchFacade) {
+    public SearchController(SearchFacade searchFacade, ModelMapper modelMapper) {
         this.searchFacade = searchFacade;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -37,8 +39,8 @@ public class SearchController implements SearchApi {
     }
 
     @Override
-    public StudentDto findById(String id) {
-        return StudentMapper.convertStudentToStudentDto(searchFacade.findById(id));
+    public ResponseEntity<StudentDto> findById(String id) {
+        return new ResponseEntity<>(mapStudentToStudentDto(searchFacade.findById(id)), HttpStatus.OK);
     }
 
     @Override
@@ -49,8 +51,12 @@ public class SearchController implements SearchApi {
     }
 
     private ResponseEntity<List<StudentDto>> convertResponse(List<Student> students) {
-        List<StudentDto> response = students.stream().map(StudentMapper::convertStudentToStudentDto).collect(Collectors.toList());
+        List<StudentDto> response = students.stream().map(this::mapStudentToStudentDto).collect(Collectors.toList());
         log.info("Students found: " + response.size());
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    private StudentDto mapStudentToStudentDto(Student student) {
+        return modelMapper.map(student, StudentDto.class);
     }
 }

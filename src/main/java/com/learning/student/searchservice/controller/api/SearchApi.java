@@ -52,7 +52,7 @@ public interface SearchApi {
             @ApiResponse(responseCode = "404", description = "Student not found",
                     content = @Content)})
     @GetMapping("student/id/{id}")
-    StudentDto findById(@PathVariable(name = "id") String id);
+    ResponseEntity<StudentDto> findById(@PathVariable(name = "id") String id);
 
     @Operation(summary = "Find all valid students.")
     @ApiResponses(value = {

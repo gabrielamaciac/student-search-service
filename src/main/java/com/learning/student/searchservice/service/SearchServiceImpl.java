@@ -15,10 +15,11 @@ import java.util.NoSuchElementException;
 @Slf4j
 public class SearchServiceImpl implements SearchService {
     private final SearchRepository searchRepository;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
-    public SearchServiceImpl(SearchRepository searchRepository) {
+    public SearchServiceImpl(SearchRepository searchRepository, ModelMapper modelMapper) {
         this.searchRepository = searchRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
