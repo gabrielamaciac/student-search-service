@@ -33,9 +33,10 @@ public class SearchController implements SearchApi {
     }
 
     @Override
-    public ResponseEntity<List<StudentDto>> findByNameAndCnp(String firstName, String lastName, String cnp, int pageNo, int pageSize) {
-        List<Student> students = searchFacade.findByNameAndCnp(firstName, lastName, cnp, pageNo, pageSize);
-        return convertResponse(students);
+    public ResponseEntity<StudentDto> findByNameAndCnp(String firstName, String lastName, String cnp) {
+        Student student = searchFacade.findByNameAndCnp(firstName, lastName, cnp);
+        log.info("Student found by name and cnp: " + student.getFirstName());
+        return new ResponseEntity<>(mapStudentToStudentDto(student), HttpStatus.OK);
     }
 
     @Override

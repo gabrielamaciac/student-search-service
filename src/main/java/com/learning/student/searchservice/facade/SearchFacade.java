@@ -10,7 +10,7 @@ public interface SearchFacade {
 
     List<Student> findByCustomQuery(String searchTerm, int page, int size);
 
-    List<Student> findByNameAndCnp(String firstName, String lastName, String cnp, int page, int size);
+    Student findByNameAndCnp(String firstName, String lastName, String cnp);
 
     List<Student> findOnlyValidStudents(boolean isValid, int page, int size);
 

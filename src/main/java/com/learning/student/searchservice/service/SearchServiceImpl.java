@@ -34,8 +34,9 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public List<Student> findByNameAndCnp(String firstName, String lastName, String cnp, int page, int size) {
-        return searchRepository.findByFirstNameAndLastAndCnp(firstName, lastName, cnp, PageRequest.of(page, size)).getContent();
+    public Student findByNameAndCnp(String firstName, String lastName, String cnp) {
+        return searchRepository.findByFirstNameAndLastAndCnp(firstName, lastName, cnp)
+                .orElseThrow(() -> new NoSuchElementException("No student found with the given parameters."));
     }
 
     @Override

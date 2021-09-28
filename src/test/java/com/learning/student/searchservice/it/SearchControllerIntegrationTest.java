@@ -79,8 +79,8 @@ class SearchControllerIntegrationTest {
         MockHttpServletResponse response = getResponse("/search/student?firstName=" + student.getFirstName()
                 + "&lastName=" + student.getLastName() + "&cnp=" + student.getCnp());
 
-        List<Student> actualStudents = objectMapper.readValue(response.getContentAsString(), new TypeReference<>() {});
-        AssertionUtils.assertStudents(student, actualStudents.get(0));
+        Student actualStudent = objectMapper.readValue(response.getContentAsString(), Student.class);
+        AssertionUtils.assertStudents(student, actualStudent);
     }
 
     @Test

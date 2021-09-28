@@ -26,8 +26,8 @@ public class SearchFacadeImpl implements SearchFacade {
     }
 
     @Override
-    public List<Student> findByNameAndCnp(String firstName, String lastName, String cnp, int page, int size) {
-        return searchService.findByNameAndCnp(firstName, lastName, cnp, page, size);
+    public Student findByNameAndCnp(String firstName, String lastName, String cnp) {
+        return searchService.findByNameAndCnp(firstName, lastName, cnp);
     }
 
     @Override

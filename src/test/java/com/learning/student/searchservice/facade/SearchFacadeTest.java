@@ -64,15 +64,14 @@ class SearchFacadeTest {
     @Test
     void findByNameAndCnpReturnsValidList() {
         // Given
-        when(searchService.findByNameAndCnp(any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
-                .thenReturn(expectedList);
+        when(searchService.findByNameAndCnp(any(String.class), any(String.class), any(String.class)))
+                .thenReturn(expectedStudent);
 
         // When
-        List<Student> actualList = searchFacade.findByNameAndCnp("FirstName", "LastName", "Cnp", 0, 5);
+        Student actualStudent = searchFacade.findByNameAndCnp("FirstName", "LastName", "Cnp");
 
         // Then
-        assertFalse(actualList.isEmpty());
-        AssertionUtils.assertStudents(expectedList.get(0), actualList.get(0));
+        AssertionUtils.assertStudents(expectedStudent, actualStudent);
     }
 
     @Test

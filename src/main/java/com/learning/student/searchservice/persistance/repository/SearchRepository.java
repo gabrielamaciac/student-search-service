@@ -6,13 +6,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;
 
+import java.util.Optional;
+
 public interface SearchRepository extends SolrCrudRepository<Student, String> {
 
     @Query("first_name:*?0* OR last_name:*?0* OR cnp:*?0*")
     Page<Student> findByUserQuery(String searchTerm, Pageable pageable);
 
     @Query("first_name:*?0* AND last_name:*?1* AND cnp:*?2*")
-    Page<Student> findByFirstNameAndLastAndCnp(String firstName, String lastName, String cnp, Pageable pageable);
+    Optional<Student> findByFirstNameAndLastAndCnp(String firstName, String lastName, String cnp);
 
     @Query("is_valid:?0")
     Page<Student> findByIsValid(boolean isValid, Pageable page);

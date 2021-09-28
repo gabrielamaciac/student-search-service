@@ -82,15 +82,14 @@ class SearchServiceTest {
     @Test
     void findByNameAndCnpReturnsValidList() {
         // Given
-        when(searchRepository.findByFirstNameAndLastAndCnp(any(String.class), any(String.class), any(String.class), eq(PageRequest.of(0, 5))))
-                .thenReturn(expectedPagedResponse);
+        when(searchRepository.findByFirstNameAndLastAndCnp(any(String.class), any(String.class), any(String.class)))
+                .thenReturn(Optional.of(expectedStudent));
 
         // When
-        List<Student> actualList = searchService.findByNameAndCnp("FirstName", "LastName", "Cnp", 0, 5);
+        Student actualStudent = searchService.findByNameAndCnp("FirstName", "LastName", "Cnp");
 
         // Then
-        assertFalse(actualList.isEmpty());
-        assertStudents(expectedList.get(0), actualList.get(0));
+        assertStudents(expectedStudent, actualStudent);
     }
 
     @Test

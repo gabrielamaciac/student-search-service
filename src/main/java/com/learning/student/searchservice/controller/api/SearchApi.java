@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Tag(name = "Student Search Service", description = "Search students through SOLr.")
@@ -27,22 +28,21 @@ public interface SearchApi {
                     @ArraySchema(schema = @Schema(implementation = StudentDto.class)))}
             )})
     @GetMapping("")
-    ResponseEntity<List<StudentDto>> findBySearchTerm(@RequestParam String searchTerm,
+    ResponseEntity<List<StudentDto>> findBySearchTerm(@RequestParam @NotBlank String searchTerm,
                                                       @RequestParam(defaultValue = "0") int pageNo,
                                                       @RequestParam(defaultValue = "10") int pageSize);
 
     @Operation(summary = "Search students.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Students matching the search query found.", content = {
-                    @Content(mediaType = "application/json", array =
-                    @ArraySchema(schema = @Schema(implementation = StudentDto.class)))}
-            )})
+            @ApiResponse(responseCode = "200", description = "Found the student.",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StudentDto.class))}),
+            @ApiResponse(responseCode = "404", description = "Student not found",
+                    content = @Content)})
     @GetMapping("/student")
-    ResponseEntity<List<StudentDto>> findByNameAndCnp(@RequestParam String firstName,
-                                                      @RequestParam String lastName,
-                                                      @RequestParam String cnp,
-                                                      @RequestParam(defaultValue = "0") int pageNo,
-                                                      @RequestParam(defaultValue = "10") int pageSize);
+    ResponseEntity<StudentDto> findByNameAndCnp(@RequestParam @NotBlank String firstName,
+                                                @RequestParam @NotBlank String lastName,
+                                                @RequestParam @NotBlank String cnp);
 
     @Operation(summary = "Get a student by its id.")
     @ApiResponses(value = {
@@ -52,7 +52,7 @@ public interface SearchApi {
             @ApiResponse(responseCode = "404", description = "Student not found",
                     content = @Content)})
     @GetMapping("student/id/{id}")
-    ResponseEntity<StudentDto> findById(@PathVariable(name = "id") String id);
+    ResponseEntity<StudentDto> findById(@PathVariable(name = "id") @NotBlank String id);
 
     @Operation(summary = "Find all valid students.")
     @ApiResponses(value = {
@@ -61,7 +61,7 @@ public interface SearchApi {
                     @ArraySchema(schema = @Schema(implementation = StudentDto.class)))}
             )})
     @GetMapping("student/isValid/{valid}")
-    ResponseEntity<List<StudentDto>> findValidStudents(@PathVariable String valid,
+    ResponseEntity<List<StudentDto>> findValidStudents(@PathVariable @NotBlank String valid,
                                                        @RequestParam(defaultValue = "0") int pageNo,
                                                        @RequestParam(defaultValue = "10") int pageSize);
 }

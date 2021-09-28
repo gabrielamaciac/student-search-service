@@ -4,6 +4,7 @@ import com.learning.student.searchservice.controller.api.SearchController;
 import com.learning.student.searchservice.controller.model.StudentDto;
 import com.learning.student.searchservice.facade.SearchFacade;
 import com.learning.student.searchservice.persistance.model.Student;
+import com.learning.student.searchservice.util.AssertionUtils;
 import com.learning.student.searchservice.util.SearchTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,15 +54,13 @@ class SearchControllerTest {
     @Test
     void findByNameAndCnpReturns200StatusCodeAndCorrectStudentList() {
         // given
-        given(searchFacade.findByNameAndCnp(any(String.class), any(String.class), any(String.class),
-                any(Integer.class), any(Integer.class))).willReturn(expectedList);
+        given(searchFacade.findByNameAndCnp(any(String.class), any(String.class), any(String.class))).willReturn(expectedStudent);
 
         // when
-        ResponseEntity<List<StudentDto>> response = searchController.findByNameAndCnp("FirstName",
-                "LastName", "Cnp", 0, 5);
+        ResponseEntity<StudentDto> response = searchController.findByNameAndCnp("FirstName", "LastName", "Cnp");
 
         // then
-        assertResponse(expectedList, response);
+        AssertionUtils.assertStudentDto(expectedStudent, response.getBody());
     }
 
     @Test
